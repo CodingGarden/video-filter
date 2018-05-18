@@ -1,4 +1,5 @@
 const API_URL = 'https://coding-garden-videos.now.sh/videos';
+const loadingElement = document.querySelector('#loading');
 const videosElement = document.querySelector('#videos');
 const filterInput = document.querySelector('#filter');
 
@@ -11,7 +12,7 @@ fetch(API_URL)
   .then(response => response.json())
   .then(videos => {
     allVideos = videos;
-    console.log(videos);
+    loadingElement.style.display = 'none';
     
     videos.forEach((video) => {
       const colDiv = document.createElement('div');
