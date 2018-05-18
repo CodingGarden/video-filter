@@ -62,11 +62,13 @@ function filterList(event) {
         videoElementsById[video.id].style.visibility = 'visible';
         videoElementsById[video.id].style.opacity = '1';
         videoElementsById[video.id].style.width = '';
+        videoElementsById[video.id].style.height = '';
       } else {
         videoElementsById[video.id].className = 'video';
         videoElementsById[video.id].style.visibility = 'hidden';
         videoElementsById[video.id].style.opacity = '0';
         videoElementsById[video.id].style.width = '0px';
+        videoElementsById[video.id].style.height = '0px';
       }
     });
     

@@ -22,7 +22,6 @@ app.get('/videos', async (req, res) => {
   videos = videos.concat(page.items);
 
   while (page.nextPageToken) {
-    console.log(page.nextPageToken);
     page = await getVideos(page.nextPageToken);
     videos = videos.concat(page.items);
   }
