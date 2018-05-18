@@ -16,7 +16,7 @@ fetch(API_URL)
     
     videos.forEach((video) => {
       const colDiv = document.createElement('div');
-      colDiv.className = 'col-4 video';
+      colDiv.className = 'col-xs-1 col-sm-6 col-md-4 video';
       videoElementsById[video.id] = colDiv;
 
       const link = document.createElement('a');
@@ -58,7 +58,7 @@ function filterList(event) {
     const regExp = new RegExp(filter, 'gi');
     allVideos.forEach(video => {
       if (video.snippet.title.match(regExp)) {
-        videoElementsById[video.id].className = 'video col-4';
+        videoElementsById[video.id].className = 'video col-xs-1 col-sm-6 col-md-4';
         videoElementsById[video.id].style.visibility = 'visible';
         videoElementsById[video.id].style.opacity = '1';
         videoElementsById[video.id].style.width = '';
