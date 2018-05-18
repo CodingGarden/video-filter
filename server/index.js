@@ -10,13 +10,24 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(cors());
 
-app.get('/videos', (req, res) => {
-  const url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=UULNgu_OupwoeESgtab33CCw&maxResults=50';
-  fetch(`${url}&key=${process.env.GOOGLE_API_KEY}`)
-    .then(response => response.json())
-    .then(json => {
-      res.json(json.items);
-    });
+const url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=UULNgu_OupwoeESgtab33CCw&maxResults=50';
+
+const getVideos = (pageToken) => 
+  fetch(`${url}&key=${process.env.GOOGLE_API_KEY}` + (pageToken ? `&pageToken=${pageToken}` : ''))
+    .then(response => response.json());
+
+app.get('/videos', async (req, res) => {
+  let videos = [];
+  let page = await getVideos();
+  videos = videos.concat(page.items);
+
+  while (page.nextPageToken) {
+    console.log(page.nextPageToken);
+    page = await getVideos(page.nextPageToken);
+    videos = videos.concat(page.items);
+  }
+
+  res.json(videos);
 });
 
 function notFound(req, res, next) {
