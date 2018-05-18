@@ -1,0 +1,4 @@
+.video {
+  opacity: 1;
+  transition: width 0.5s, visibility 0s, opacity 0.5s linear;
+}

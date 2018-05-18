@@ -15,7 +15,7 @@ fetch(API_URL)
     
     videos.forEach((video) => {
       const colDiv = document.createElement('div');
-      colDiv.className = 'col-4';
+      colDiv.className = 'col-4 video';
       videoElementsById[video.id] = colDiv;
 
       const link = document.createElement('a');
@@ -57,9 +57,15 @@ function filterList(event) {
     const regExp = new RegExp(filter, 'gi');
     allVideos.forEach(video => {
       if (video.snippet.title.match(regExp)) {
-        videoElementsById[video.id].style.display = '';
+        videoElementsById[video.id].className = 'video col-4';
+        videoElementsById[video.id].style.visibility = 'visible';
+        videoElementsById[video.id].style.opacity = '1';
+        videoElementsById[video.id].style.width = '';
       } else {
-        videoElementsById[video.id].style.display = 'none';
+        videoElementsById[video.id].className = 'video';
+        videoElementsById[video.id].style.visibility = 'hidden';
+        videoElementsById[video.id].style.opacity = '0';
+        videoElementsById[video.id].style.width = '0px';
       }
     });
     
