@@ -26,7 +26,7 @@ https://cg-videos.now.sh
 ## Setup
 
 ```sh
-cp .env.sample .env 
+cp server/.env.sample server/.env 
 ```
 
 Update .env with your API KEY.
