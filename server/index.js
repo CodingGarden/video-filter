@@ -10,6 +10,7 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(cors());
 
+let cache;
 const url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=UULNgu_OupwoeESgtab33CCw&maxResults=50';
 
 const getVideos = (pageToken) => 
@@ -17,15 +18,17 @@ const getVideos = (pageToken) =>
     .then(response => response.json());
 
 app.get('/videos', async (req, res) => {
-  let videos = [];
+  if (cache) return res.json(cache);
+
   let page = await getVideos();
-  videos = videos.concat(page.items);
+  let videos = page.items;
 
   while (page.nextPageToken) {
     page = await getVideos(page.nextPageToken);
     videos = videos.concat(page.items);
   }
 
+  cache = videos;
   res.json(videos);
 });
 
