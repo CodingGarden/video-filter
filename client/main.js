@@ -3,54 +3,56 @@ const loadingElement = document.querySelector('#loading');
 const videosElement = document.querySelector('#videos');
 const filterInput = document.querySelector('#filter');
 
-let allVideos;
+let allVideos = localStorage.videos ? JSON.parse(localStorage.videos) : [];
 let videoElementsById = {};
 
 filterInput.addEventListener('keyup', filterList);
 
 fetch(API_URL)
   .then(response => response.json())
-  .then(videos => {
-    allVideos = videos;
-    loadingElement.style.display = 'none';
-    
-    videos.forEach((video) => {
-      const colDiv = document.createElement('div');
-      colDiv.className = 'col-xs-1 col-sm-6 col-md-4 video';
-      videoElementsById[video.id] = colDiv;
+  .then(showVideos);
 
-      const link = document.createElement('a');
-      link.setAttribute('target', '_blank');
-      link.href = `https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`;
+function showVideos(videos) {
+  localStorage.videos = JSON.stringify(videos);
+  allVideos = videos;
+  loadingElement.style.display = 'none';
 
-      const videoElement = document.createElement('div');
-      videoElement.className = 'card ma-1';
+  videos.forEach((video) => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'col-xs-1 col-sm-6 col-md-4 video';
+    videoElementsById[video.id] = colDiv;
 
-      const img = document.createElement('img');
-      
-      const imageRes = video.snippet.thumbnails.standard || video.snippet.thumbnails.medium || video.snippet.thumbnails.high;
+    const link = document.createElement('a');
+    link.setAttribute('target', '_blank');
+    link.href = `https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`;
 
-      img.src = imageRes.url;
-      img.className = 'card-img-top';
+    const videoElement = document.createElement('div');
+    videoElement.className = 'card ma-1';
 
-      videoElement.appendChild(img);
+    const img = document.createElement('img');
 
-      const mediaBody = document.createElement('div');
-      mediaBody.className = 'card-body';
+    const imageRes = video.snippet.thumbnails.standard || video.snippet.thumbnails.medium || video.snippet.thumbnails.high;
 
-      videoElement.appendChild(mediaBody);
+    img.src = imageRes.url;
+    img.className = 'card-img-top';
 
-      const h5 = document.createElement('h5');
-      h5.className = 'card-title';
-      h5.textContent = video.snippet.title;
-      mediaBody.appendChild(h5);
-      
-      link.appendChild(videoElement);
-      colDiv.appendChild(link);
-      videosElement.appendChild(colDiv);
-    });
+    videoElement.appendChild(img);
 
+    const mediaBody = document.createElement('div');
+    mediaBody.className = 'card-body';
+
+    videoElement.appendChild(mediaBody);
+
+    const h5 = document.createElement('h5');
+    h5.className = 'card-title';
+    h5.textContent = video.snippet.title;
+    mediaBody.appendChild(h5);
+
+    link.appendChild(videoElement);
+    colDiv.appendChild(link);
+    videosElement.appendChild(colDiv);
   });
+}
 
 function filterList(event) {
   const filter = event.target.value;
@@ -58,17 +60,9 @@ function filterList(event) {
     const regExp = new RegExp(filter, 'gi');
     allVideos.forEach(video => {
       if (video.snippet.title.match(regExp)) {
-        videoElementsById[video.id].className = 'video col-xs-1 col-sm-6 col-md-4';
-        videoElementsById[video.id].style.visibility = 'visible';
-        videoElementsById[video.id].style.opacity = '1';
-        videoElementsById[video.id].style.width = '';
-        videoElementsById[video.id].style.height = '';
+        videoElementsById[video.id].className = 'video video-show col-xs-1 col-sm-6 col-md-4';
       } else {
-        videoElementsById[video.id].className = 'video';
-        videoElementsById[video.id].style.visibility = 'hidden';
-        videoElementsById[video.id].style.opacity = '0';
-        videoElementsById[video.id].style.width = '0px';
-        videoElementsById[video.id].style.height = '0px';
+        videoElementsById[video.id].className = 'video video-hide';
       }
     });
     

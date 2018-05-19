@@ -3,9 +3,22 @@ body {
 }
 
 .video {
-  opacity: 1;
   transition: height 0.5s, width 0.5s, visibility 0s, opacity 0.5s linear;
 }
+
+.video-show {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+  height: auto;
+}
+
+.video-hide {
+  visibility: hidden;
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}      
 
 .title, #loading {
   text-align: center;
