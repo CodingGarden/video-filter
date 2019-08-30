@@ -35,3 +35,7 @@ a {
 a:hover {
   color: lime;
 }
+
+.link {
+  margin: 0.5em;
+}

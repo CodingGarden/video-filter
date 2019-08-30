@@ -1,4 +1,6 @@
 const API_URL = 'https://coding-garden-videos.now.sh/videos';
+const formElement = document.querySelector('form');
+const filterLinksElement = document.querySelector('.filter-links');
 const loadingElement = document.querySelector('#loading');
 const videosElement = document.querySelector('#videos');
 const filterInput = document.querySelector('#filter');
@@ -6,7 +8,52 @@ const filterInput = document.querySelector('#filter');
 let allVideos = localStorage.videos ? JSON.parse(localStorage.videos) : [];
 let videoElementsById = {};
 
-filterInput.addEventListener('keyup', filterList);
+const filterLinks = [
+  'Setting up a Mac for Web Development',
+  'Intro to Git and Github',
+  'Newby Tuesday',
+  'Newb Quest',
+  'Code Katas',
+  'Higher Order Functions',
+  'What is Application State?',
+  'React',
+  'Vue',
+  'Svelte',
+  'Full Stack',
+  'Node.js',
+  'Mongo',
+  'Postgres',
+  'Chill Stream',
+  'Throwback Thursday',
+  'Morning Tea',
+  'Afternoon Tea',
+  'Meetup'
+];
+
+filterLinks.forEach(link => {
+  const linkElement = document.createElement('a');
+  linkElement.textContent = link;
+  linkElement.setAttribute('class', 'link');
+  linkElement.href = `#/?filter=${link}`;
+  filterLinksElement.appendChild(linkElement);
+  const spacer = document.createElement('span');
+  spacer.textContent = '|';
+  filterLinksElement.appendChild(spacer);
+});
+
+formElement.addEventListener('submit', (e) => e.preventDefault());
+filterInput.addEventListener('input', filterList);
+
+if (window.location.hash) {
+  filterInput.value = decodeURIComponent(window.location.hash.replace('#/?filter=', ''));
+}
+
+window.addEventListener('hashchange', (e) => {
+  filterInput.value = decodeURIComponent(window.location.hash.replace('#/?filter=', ''));
+  filterList({
+    target: filterInput
+  });
+});
 
 if (allVideos.length > 0) {
   showVideos(allVideos);
@@ -25,6 +72,9 @@ function showVideos(videos) {
   videos.forEach((video) => {
     const videoElement = createVideoElement(video);
     videosElement.appendChild(videoElement);
+  });
+  filterList({
+    target: filterInput
   });
 }
 
@@ -67,6 +117,7 @@ function createVideoElement(video) {
 
 function filterList(event) {
   const filter = event.target.value;
+  window.location.hash = `#/?filter=${filter}`;
   if (allVideos) {
     const regExp = new RegExp(filter, 'gi');
     allVideos.forEach(video => {
